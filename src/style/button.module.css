@@ -1,0 +1,26 @@
+.confirm-button {
+    background-color: hsl(var(--primary));
+    color: white;
+    border: 1px solid hsl(var(--border));
+    border-radius: 5px;
+    height: 37px;
+    width: 100%;
+}
+
+.confirm-button:hover {
+    background-color: hsl(var(--primary));
+}
+
+.cancel-button {
+    font-family: "Inter", sans-serif;
+    background-color:hsl( var(--background));
+    color: inherit;
+    border: 1px solid hsl(var(--border));
+    border-radius: 5px;
+    height: 37px;
+    width: 100%;
+}
+
+.cancel-button:hover{
+background-color: hsl(var(--background))
+}

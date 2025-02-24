@@ -3,12 +3,12 @@ import { GetDataInServerSide } from '@/lib/actions/get-server'
 import React from 'react'
 
 async function TrainersPage({searchParams}) {
-    const departments = await GetDataInServerSide(
-        '/dashboard/departments/'
+    const trainers = await GetDataInServerSide(
+        '/api/trainers/'
       )
   return (
     <div>
-        <TrainersDataTable trainers={departments}/>
+        <TrainersDataTable trainers={trainers}/>
     </div>
   )
 }

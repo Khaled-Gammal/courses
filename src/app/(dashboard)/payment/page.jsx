@@ -5,12 +5,12 @@ import { GetDataInServerSide } from "@/lib/actions/get-server";
 
 export default async function PaymentPage() {
 
-  const financial = await GetDataInServerSide(
-    '/dashboard/admins/'
+  const payment = await GetDataInServerSide(
+    '/api/payment/'
   )
   return (
       <div>
-       <PaymentDataTable payment={financial}/>
+       <PaymentDataTable payment={payment}/>
       </div>
     )
   }

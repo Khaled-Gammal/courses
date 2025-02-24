@@ -6,10 +6,10 @@ import card from "@/style/card.module.css"
 
 export default async function Home() {
     const overview = await GetDataInServerSide(
-        '/dashboard/overview/'
+        '/api/overview/'
       )
 
-      console.log(overview);
+      
     const columns = [
         {   id:"name",
             header: "Instructor Name",
@@ -19,12 +19,6 @@ export default async function Home() {
         {   id:"courses",
             header: "Courses",
             accessorKey: "courses",
-            className: "text-center text-primary text-[14px] font-medium",
-
-        },
-        {   id:"requests",
-            header: "Requests",
-            accessorKey: "requests",
             className: "text-center text-primary text-[14px] font-medium",
 
         },
@@ -42,29 +36,25 @@ export default async function Home() {
     const data = [
         {   
             name: "Mohamed Ali",
-            courses: "Tagweed - Tafseer",
-            requests: "2 Pending ",
+            courses: "Frontend",
             working_hours: "150 Hours",
             salary_till_today: "5000  EGP"
         },
         {
             name: "Mohamed Ali",
-            courses: "Tagweed - Tafseer",
-            requests: "2 Pending ",
+            courses: "Backend",
             working_hours: "150 Hours",
             salary_till_today: "5000  EGP"
         },
         {
             name: "Mohamed Ali",
-            courses: "Tagweed - Tafseer",
-            requests: "2 Pending ",
+            courses: "UX/UI",
             working_hours: "150 Hours",
             salary_till_today: "5000  EGP"
         },
         {
             name: "Mohamed Ali",
-            courses: "Tagweed - Tafseer",
-            requests: "2 Pending ",
+            courses: "Flutter",
             working_hours: "150 Hours",
             salary_till_today: "$5000  EGP"
         },
@@ -72,17 +62,17 @@ export default async function Home() {
     const total=[
         {
             title: "Total Trainers",
-            value: overview?.total_students
+            value: 200
         },{
             title: "Total Instructors",
-            value: overview?.total_instructors
+            value: 15
         },{
             title: "Total Courses",
-            value: overview?.total_sessions
+            value: 20
         },
         {
-            title: "Total Requests",
-            value: overview?.total_groups
+            title: "Total Sessions",
+            value: 100
         }
     ]
     return (

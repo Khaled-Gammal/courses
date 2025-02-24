@@ -2,13 +2,11 @@ import CoursesDataTable from "@/data/courses/courses-table";
 import { GetDataInServerSide } from "@/lib/actions/get-server";
 
 export default async function CoursesPage() {
-  const groups = await GetDataInServerSide(
-    '/dashboard/groups/'
- )
+  const courses = await GetDataInServerSide("/api/courses");
 
   return (
     <div>
-      <CoursesDataTable courses={groups} />
+      <CoursesDataTable courses={courses} />
     </div>
   )
 }

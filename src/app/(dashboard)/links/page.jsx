@@ -3,13 +3,11 @@ import LinksDataTable from "@/data/links/links-table";
 import { GetDataInServerSide } from "@/lib/actions/get-server";
 
 export default async function LinksPage() {
-  const sections = await GetDataInServerSide(
-    '/dashboard/sections/'
- )
+  const links = await GetDataInServerSide("/api/links");
 
   return (
       <div>
-       <LinksDataTable links={sections}/>
+       <LinksDataTable links={links}/>
       </div>
     )
   }

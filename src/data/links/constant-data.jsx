@@ -98,6 +98,7 @@ const linksData = [
     label: "Link Name",
     placeholder: "Enter Section name",
     type: "text",
+    required: true,
   },
   {
     id:"course",
@@ -106,6 +107,7 @@ const linksData = [
     placeholder:"Select course name",
     type:"selected",
     options:["frontend","backend","fullstack","android","ios","react","angular","vue"],
+    required: true,
   }
   ,
   {
@@ -121,6 +123,7 @@ const linksData = [
     label: "Date",
     placeholder: "Enter Date",
     type: "date",
+    required: true,
   }
   
 ];

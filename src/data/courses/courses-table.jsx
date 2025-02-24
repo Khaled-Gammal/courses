@@ -12,20 +12,20 @@ import { useViewDialog } from "@/hooks/custom-view-dialog";
 import { handlePostInServer } from "@/lib/actions/post-server";
 import card from '@/style/card.module.css'
 import typography from '@/style/typography.module.css'
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function CoursesDataTable() {
-
+const [courses, setCourses] = useState(courseData);
   // edit course dialog
   const [handleEditGroup, editGroupConfirmDialog] = useEditDialog({
-    onConfirm: (state) => handleEdit(state),
+    onConfirm: (state ,dispatch) => handleEdit(state,dispatch),
     title: "Edit Course",
     fields: editCourseFields,
   });
 
   // add group dialog
   const [handleAddGroup, addGroupConfirmDialog] = useAddDialog({
-    onConfirm: (state) => handleAddNewGroup(state),
+    onConfirm: (state,dispatch) => handleAddNewGroup(state,dispatch),
     title: "Add a New Course",
     fields: addCourseFields,
   });
@@ -37,13 +37,18 @@ export default function CoursesDataTable() {
 
   // delete group dialog
   const [handleDelete, deleteComponentConfirmDialog] = useConfirmMessage({
-    onConfirm: (row) => handleDeleteRow("/dashboard/groups/",row?.id,"/groups"),
+    onConfirm: (row) => handleDeleteRow(row?.name),
     text: "Do you sure you wanna to delete this Course ? ",
     title: "Delete Course",
     successMessage: "Cousre has been deleted successfully",
   });
 
-  const handleAddNewGroup = async (state) => {
+  const handleDeleteRow=(name)=>{
+    const newCourses = courses.filter((course) => course.name !== name);
+    setCourses(newCourses);
+  }
+
+  const handleAddNewGroup = async (state,dispatch) => {
     console.log("state=>", state);
     try {
       const data = {};
@@ -54,44 +59,38 @@ export default function CoursesDataTable() {
         }
       });
 
-      courseData.push({...data})
-      console.log(courseData)
+      setCourses([...courses, data]);
+      dispatch({type:"success"})
+      toast.success("successfully added course")
     } catch (error) {
-      console.error("Error adding section:", error);
-      toast.error("Error adding section");
+      console.error("Error adding course:", error);
+      toast.error("Error adding course");
     }
   }
 
-  const handleEdit = (state) => {
+  const handleEdit = (state,dispatch) => {
     try {
-      Groups.forEach(async (row) => {
+      courses.forEach(async (row) => {
         if (row.id === state.id) {
           const changes = compareData(row, state);
           if (Object.keys(changes).length > 0) {
             console.log("changes=>", changes);
             // Call the API to update the student
-            const formData=changes
-            const response = await handleUpdateInServer(
-              `/dashboard/groups/${row?.id}/`,
-              "PATCH",
-              formData,
-              true,
-              "object",
-              "/groups"
+            setCourses(
+              courses.map((course) =>
+                course.id === state.id ? { ...course, ...changes } : course
+              )
             );
-            if (response.success) {
-            toast.success(response.success);
-            }else {
-              toast.error(response.error);
-            }
-          }
+            dispatch({type:"success"})
+            toast.success("successfully updated course")
+                     }
         }
       });
     } catch (error) {
       console.error("Error updating instructor:", error);
     }
   }
- useEffect(()=>{},[courseData])
+ 
   return (
     <div className={card['main-card']}>
       <div className="flex justify-between mb-[19px]">
@@ -101,7 +100,7 @@ export default function CoursesDataTable() {
        {addGroupConfirmDialog}
         </div>
       </div>
-      <DataTableDemo data={courseData} columns={columns} isPending={false} 
+      <DataTableDemo data={courses} columns={columns} isPending={false} 
       onDelete={handleDelete}
       onEdit={handleEditGroup}
       onView={handleViewGroup}

@@ -56,22 +56,13 @@ export default function LoginForm() {
   
     try {
       
-      const loadingId=toast.loading("Please wait...");
+      let loadingId=toast.loading("Please wait...");
       dispatch({ type: "loading", payload: true });
       const { email, password } = state;
-      const response = await handleLogin({ email, password });
-      if ( response.status === 200) {
         // Handle successful login
-         toast.success(response.success);  // Display success message
+         toast.success("Welcome to Solvytix");  // Display success message
          window.location.href = "/";
-      } else if (response.status === 400) {
-        // Handle server validation error
-        dispatch({ type: "errors", payload: { password: response.message } });
-        toast.error(response.message);
-      } else {
-        // Handle any other errors
-        toast.error(response.message);
-      }
+     
     } catch (error) {
       toast.error(error.message);
     } finally {

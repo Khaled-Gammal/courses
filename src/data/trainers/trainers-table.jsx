@@ -13,10 +13,11 @@ import  card  from '@/style/card.module.css';
 import  typography  from '@/style/typography.module.css';
 import { addTrainerFields, columns, editTrainerFields, trainerData, viewTrainerFields } from "./constant-data";
 import { useViewDialog } from "@/hooks/custom-view-dialog";
+import { useState } from "react";
 
 function TrainersDataTable() {
 
- 
+  const [trainers,setTrainers]=useState( trainerData);
    // add Trainer dialog
    const [handleAddTrainer, addTrainerConfirmDialog] = useAddDialog({
      onConfirm: (state) => handleAddNewTrainer(state),
@@ -34,10 +35,16 @@ function TrainersDataTable() {
 
   // delete Trainer dialog
   const [handleDelete, deleteComponentConfirmDialog] = useConfirmMessage({
-    onConfirm: (row) => handleDeleteRow("/dashboard/Trainers/",row?.id,"/Trainers"),
+    onConfirm: (row) => handleDeleteRow(row?.full_name),
     text: "Do you sure you wanna to delete this Trainer ? ",
     title: "Delete Trainer",
   });
+
+  // handle delete function
+  const handleDeleteRow=(full_name)=>{
+    const newTrainers = trainers.filter((trainer) => trainer.full_name !== full_name);
+    setTrainers(newTrainers);
+  }
 
    // view trainer details dialog
    const [handleViewTrainer, viewTrainerConfirmDialog] = useViewDialog({
@@ -46,10 +53,10 @@ function TrainersDataTable() {
   });
 
   // handle add function
-  const handleAddNewTrainer = async(state) => {
+  const handleAddNewTrainer = async(state,dispatch) => {
     
     try {
-      const formData = new FormData();
+      const data = {};
       // Append all keys of state to data except 'loading' and 'error'
       Object.keys(state).forEach(key => {
         if (key !== 'loading' && key !== 'error') {
@@ -57,19 +64,11 @@ function TrainersDataTable() {
         }
       });
      
-      const response = await handlePostInServer(
-        "/dashboard/Trainers/create-Trainer/",
-        formData,
-        "/Trainers",
-        false,
-        "formData"
-      );
-      console.log(response);
-      if (response.success) {
-        toast.success(response.success);
-      } else {
-        toast.error(response.error);
-      }
+      setTrainers({...trainers, data})
+      toast.success("Trainer added successfully");
+      dispatch({type:"success"})
+
+    
     } catch (error) {
       console.error("Error adding section:", error);
       toast.error("Error adding section");
@@ -80,29 +79,23 @@ function TrainersDataTable() {
    // handle edit function
    const handleEdit = (state) => {
     try {
-      TrainersData.forEach(async (row) => {
+      trainerData.forEach(async (row) => {
         if (row.id === state.id) {
           const changes = compareData(row, state);
           if (Object.keys(changes).length > 0) {
             console.log("changes=>", changes);
             // Call the API to update the student
-            const formData=changes
-            const response = await handleUpdateInServer(
-              `/dashboard/Trainers/${row?.id}/`,
-              "PATCH",
-              formData,
-              true,
-              "object",
-              "/Trainers"
-            );
-            if (response.success) {
-            toast.success(response.success);
-            }else {
-              toast.error(response.error);
-            }
+              setTrainers(
+                trainers.map((trainer) =>
+                  trainer.id === state.id ? { ...trainer, ...changes } : trainer
+                )
+              )
+              toast.success("Trainer updated successfully");
           }
         }
-      });
+      }
+      );
+    
     } catch (error) {
       console.error("Error updating instructor:", error);
     }
@@ -111,13 +104,13 @@ function TrainersDataTable() {
   return (
    <div className={card['main-card']}>
          <div className="flex justify-between mb-[19px]">
-         <h1 className={typography["main-text"]}>Payment Management</h1>
+         <h1 className={typography["main-text"]}>Trainers Management</h1>
          <div className="flex justify-end mb-[19px] gap-4">
            
           {addTrainerConfirmDialog}
            </div>
          </div>
-         <DataTableDemo data={trainerData} columns={columns} isPending={false} 
+         <DataTableDemo data={trainers} columns={columns} isPending={false} 
           onDelete={handleDelete}
           onEdit={handleEditTrainer}
           onView={handleViewTrainer}

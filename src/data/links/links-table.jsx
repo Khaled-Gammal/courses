@@ -12,21 +12,22 @@ import { useViewDialog } from "@/hooks/custom-view-dialog";
 import { handlePostInServer } from "@/lib/actions/post-server";
 import  card  from '@/style/card.module.css';
 import  typography  from '@/style/typography.module.css';
+import { useState } from "react";
 
 export default function LinksDataTable() {
-
+  const [links, setLinks] = useState(linksData);
  
  
   // edit Link dialog
   const [handleEditLink, editLinkConfirmDialog] = useEditDialog({
-    onConfirm: (state) => handleEdit(state),
+    onConfirm: (state,dispatch) => handleEdit(state,dispatch),
     title: "Edit Link",
     fields: editLinkFields,
   });
 
   // add link dialog
   const [handleAddLink, addLinkConfirmDialog] = useAddDialog({
-    onConfirm: (state) => handleAddNewLink(state),
+    onConfirm: (state,dispatch) => handleAddNewLink(state,dispatch),
     title: "Add a New Link",
     fields: addLinkFields,
   });
@@ -39,12 +40,17 @@ export default function LinksDataTable() {
 
   // delete Link dialog
   const [handleDelete, deleteComponentConfirmDialog] = useConfirmMessage({
-    onConfirm: (row) => handleDeleteRow("/dashboard/Links/",row?.id,"/Links"),
+    onConfirm: (row) => handleDeleteRow(row?.course),
     text: "Do you sure you wanna to delete this Link ? ",
     title: "Delete Link",
   });
+
+  const handleDeleteRow=(course)=>{
+    const newLinks = links.filter((link) => link.course !== course);
+    setLinks(newLinks);
+  }
 // hadle add function
-const handleAddNewLink = async(state) => {
+const handleAddNewLink = async(state,dispatch) => {
   try {
     const data = {};
     // Append all keys of state to data except 'loading' and 'error'
@@ -53,20 +59,11 @@ const handleAddNewLink = async(state) => {
         data[key] = state[key];
       }
     });
+    setLinks({...links, data})
+    toast.success("Link added successfully");
+    dispatch({type:"success"})
    
-    const response = await handlePostInServer(
-      "/dashboard/Links/",
-      JSON.parse(JSON.stringify(data)),
-      "/Links",
-      true,
-      "object"
-    );
-    console.log(response);
-    if (response.success) {
-      toast.success(response.success);
-    } else {
-      toast.error(response.error);
-    }
+    
   } catch (error) {
     console.error("Error adding Link:", error);
     toast.error("Error adding Link");
@@ -74,28 +71,22 @@ const handleAddNewLink = async(state) => {
 
 }
   // handle edit function
-  const handleEdit = (state) => {
+  const handleEdit = (state,dispatch) => {
     try {
-      LinksData.forEach(async (row) => {
+      linksData.forEach(async (row) => {
         if (row.id === state.id) {
           const changes = compareData(row, state);
           if (Object.keys(changes).length > 0) {
             console.log("changes=>", changes);
             // Call the API to update the student
-            const formData=changes
-            const response = await handleUpdateInServer(
-              `/dashboard/Links/${row?.id}/`,
-              "PATCH",
-              formData,
-              true,
-              "object",
-              "/Links"
-            );
-            if (response.success) {
-            toast.success(response.success);
-            }else {
-              toast.error(response.error);
-            }
+            
+              setLinks(
+                links.map((link) =>
+                  link.id === state.id ? { ...link, ...changes } : link
+                )
+              )
+              toast.success("Link updated successfully");
+              dispatch({type:"success"})
           }
         }
       });
@@ -114,7 +105,7 @@ const handleAddNewLink = async(state) => {
       {addLinkConfirmDialog}
         </div>
       </div>
-      <DataTableDemo data={linksData} columns={columns} isPending={false} 
+      <DataTableDemo data={links} columns={columns} isPending={false} 
       onDelete={handleDelete}
       onEdit={handleEditLink}
       onView={handleViewLink}

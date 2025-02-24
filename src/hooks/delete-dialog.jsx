@@ -56,12 +56,12 @@ export const useConfirmMessage = ({
             type="submit"
             onClick={() => {
               onConfirm(...args)
-                .then((res) => {
-                  viewMessage(res?.deails || successMessage);
-                })
-                .catch((err) => {
-                  viewMessage(err?.error);
-                });
+                // .then((res) => {
+                  viewMessage( successMessage);
+                // })
+                // .catch((err) => {
+                  // viewMessage(err?.error);
+                // });
               handleClose();
             }}
           >

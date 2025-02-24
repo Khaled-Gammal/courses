@@ -13,6 +13,7 @@ import {
   ArrowUpDown,
   Ban,
   ChevronDown,
+  ExternalLink,
   Eye,
   FileText,
   Image,
@@ -25,16 +26,6 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -58,13 +49,12 @@ export function DataTableDemo({
   onPagination = ()=>{},
   pagination=10,
   count=10,
-  onSearch = false,
 }) {
   const [sorting, setSorting] = React.useState([]);
   const [columnFilters, setColumnFilters] = React.useState([]);
   const [columnVisibility, setColumnVisibility] = React.useState({});
   const [rowSelection, setRowSelection] = React.useState({});
-  const { searchParams, pathname, router,addQueryString } = UseSearchParamsHook()
+  const {addQueryString } = UseSearchParamsHook()
   const table = useReactTable({
     data,
     columns,
@@ -186,6 +176,10 @@ const handlePageChange = (e) => {
                       ):cell.column.columnDef.id === "video"?(
                         <MonitorPlay  color="#BF9E5C" onClick={()=>{
                           window.open(cell.row.original.video)
+                        }}/>
+                      ):cell.column.columnDef.id === "link"?(
+                        <ExternalLink color="#BF9E5C" onClick={()=>{
+                          window.open(cell.row.original.link)
                         }}/>
                       ):
                       (

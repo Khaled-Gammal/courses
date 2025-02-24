@@ -67,7 +67,7 @@ export const useEditDialog = ({
     try {
       // Submit logic here, e.g., call API
       console.log("Form submitted with values:", state);
-      onConfirm(state); // Call onConfirm callback with form values
+      onConfirm(state,dispatch); // Call onConfirm callback with form values
       dispatch({ type: "success" }); // Set success state on successful submission
     } catch (error) {
       dispatch({ type: "error", payload: error.message }); // Handle error state

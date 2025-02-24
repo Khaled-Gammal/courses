@@ -118,6 +118,7 @@ const addCourseFields = [
     label: "Course Name",
     placeholder: "Enter course name",
     type: "text",
+    required: true,
   },
   {
     id: "instructor",
@@ -126,6 +127,7 @@ const addCourseFields = [
     placeholder: "Select instructor name",
     type: "selected",
     options: ["Instructor 1", "Instructor 2", "Instructor 3"],
+    required: true,
   },
   {
     id: "department",
@@ -134,6 +136,7 @@ const addCourseFields = [
     placeholder: "Select department name",
     type: "selected",
     options: ["Department 1", "Department 2", "Department 3"],
+    required: true,
   },
 ];
 

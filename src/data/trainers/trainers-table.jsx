@@ -20,7 +20,7 @@ function TrainersDataTable() {
   const [trainers,setTrainers]=useState( trainerData);
    // add Trainer dialog
    const [handleAddTrainer, addTrainerConfirmDialog] = useAddDialog({
-     onConfirm: (state) => handleAddNewTrainer(state),
+     onConfirm: (state,dispatch) => handleAddNewTrainer(state,dispatch),
     title: "Add a New Trainer",
     fields: addTrainerFields,
   });
@@ -60,18 +60,18 @@ function TrainersDataTable() {
       // Append all keys of state to data except 'loading' and 'error'
       Object.keys(state).forEach(key => {
         if (key !== 'loading' && key !== 'error') {
-          formData.append(key, state[key]);
+          data[key] = state[key];
         }
       });
      
-      setTrainers({...trainers, data})
+      setTrainers([...trainers, data])
       toast.success("Trainer added successfully");
       dispatch({type:"success"})
 
     
     } catch (error) {
-      console.error("Error adding section:", error);
-      toast.error("Error adding section");
+      console.error("Error adding trainer:", error);
+      toast.error("Error adding trainer");
     }
   
   }

@@ -60,8 +60,10 @@ export const useAddDialog = ({
   onConfirm = () => {},
 }) => {
   const [args, setArgs] = useState(null);
+  const [open, setOpen] = useState(false);
   const handleOpen = (...params) => {
     setArgs([...params]);
+    setOpen
   };
 
   const [state, dispatch] = useReducer(reducer, initialValues);
@@ -91,6 +93,7 @@ export const useAddDialog = ({
       dispatch({ type: "error", payload: { error: error.message||args } }); // Handle error state
     } finally {
       dispatch({ type: "success" }); // Clear error state on success
+      setOpen(false);
      
     }
   };
@@ -106,7 +109,7 @@ const handleClearData=()=>{
   })
 }
   const dialog = (
-    <Dialog className='overflow-y-auto' >
+    <Dialog className='overflow-y-auto' open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild className="">
         <div className="flex justify-end items-center ">
           <Button

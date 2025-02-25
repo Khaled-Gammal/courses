@@ -59,7 +59,7 @@ const handleAddNewLink = async(state,dispatch) => {
         data[key] = state[key];
       }
     });
-    setLinks({...links, data})
+    setLinks([...links, data])
     toast.success("Link added successfully");
     dispatch({type:"success"})
    
